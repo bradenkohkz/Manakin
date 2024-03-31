@@ -1,5 +1,5 @@
 
-namespace PluginTemplate.Shared
+namespace Manakin.Shared
 {
 
     /// <summary>

@@ -6,7 +6,7 @@ using System.Reflection;
 
 using RRT = Rhino.Runtime;
 
-namespace PluginTemplate.Tests.SharedRhino
+namespace Manakin.Tests.SharedRhino
 {
     /// <summary>
     /// Shared VS test assembly class using Rhino.Inside. 

@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace PluginTemplate.PluginGrasshopper
+namespace Manakin.PluginGrasshopper
 {
     public class PluginInfo : GH_AssemblyInfo
     {

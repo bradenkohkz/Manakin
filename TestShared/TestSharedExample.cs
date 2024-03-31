@@ -1,9 +1,8 @@
 ﻿using System;
+using Manakin.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using PluginTemplate.Shared;
-
-namespace PluginTemplate.Tests.Shared
+namespace Manakin.Tests.Shared
 {
     [TestClass]
     public class TestSharedExample

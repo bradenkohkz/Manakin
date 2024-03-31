@@ -4,9 +4,9 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 
-namespace PluginTemplate.PluginGrasshopper
+namespace Manakin.PluginGrasshopper
 {
-    public class ExampleComponent : GH_Component
+    public class LoftObjectOperationComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -15,10 +15,7 @@ namespace PluginTemplate.PluginGrasshopper
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public ExampleComponent()
-          : base("ExampleComponent", "Nickname",
-            "Description",
-            "PluginTemplate", "Example")
+        public LoftObjectOperationComponent() : base("Loft Animation Geometry", "AnimLoftOp", "Creates an operation to loft sections", "Manakin", "Operation")
         {
         }
 
@@ -27,6 +24,7 @@ namespace PluginTemplate.PluginGrasshopper
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddCurveParameter("Sections", "S", "Sections to loft in animation", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -34,6 +32,7 @@ namespace PluginTemplate.PluginGrasshopper
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("Animation Operation", "AO", "Animation Operation", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -43,6 +42,16 @@ namespace PluginTemplate.PluginGrasshopper
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            // Variables to hold input data
+            List<Curve> sections = new List<Curve>();
+
+            // Retrieve input data
+            if (!DA.GetDataList(0, sections)) return;
+
+            // Create the objects 
+            var loftOperation = new LoftObjectOperation(sections);
+
+            DA.SetData(0, loftOperation);
         }
 
         /// <summary>
@@ -58,6 +67,6 @@ namespace PluginTemplate.PluginGrasshopper
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("69E66DAA-0427-4ABF-9CE9-277D645F4A7D");
+        public override Guid ComponentGuid => new Guid("0EBF4978-F136-44EB-87F2-265553B22D86");
     }
 }

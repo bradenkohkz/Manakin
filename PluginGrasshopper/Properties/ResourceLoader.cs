@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PluginTemplate.PluginGrasshopper
+namespace Manakin.PluginGrasshopper
 {
     /// <summary>
     /// Load and convert embedded assembly resources

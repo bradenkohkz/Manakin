@@ -1,10 +1,10 @@
 ﻿using System;
+using Manakin.SharedRhino;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Rhino.Geometry;
-using PluginTemplate.SharedRhino;
 
-namespace PluginTemplate.Tests.SharedRhino
+namespace Manakin.Tests.SharedRhino
 {
     [TestClass]
     public class TestSharedRhinoExample

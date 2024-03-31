@@ -7,7 +7,7 @@ REM where to find yak
 set "YakExecutable=C:\Program Files\Rhino 8\System\yak.exe"
 
 REM name of the solution to build
-set "Name=PluginTemplate"
+set "Name=Manakin"
 
 REM where to copy resulting yak packages
 set "YakTargetDir=bin\packages"
