@@ -28,6 +28,8 @@ namespace Manakin.PluginGrasshopper
                 GH_ParamAccess.item);
             pManager.AddGenericParameter("Animation Geometry", "AG", "Animation Geometry", GH_ParamAccess.item);
             pManager.AddGenericParameter("Animation Operation", "AO", "Animation Operation", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Persist", "P", "Persist Geometry after operation", GH_ParamAccess.item, true);
+            pManager[3].Optional = true;
         }
 
         /// <summary>
@@ -49,14 +51,16 @@ namespace Manakin.PluginGrasshopper
             int startingFrame = 0;
             AnimationGeometry animGeom = null;
             IObjectOperation animOp = null;
+            bool persistAfterOperation = true;
 
             // Retrieve input data
             if (!DA.GetData(0, ref startingFrame)) return;
             if (!DA.GetData(1, ref animGeom)) return;
             if (!DA.GetData(2, ref animOp));
+            if (!DA.GetData(3, ref persistAfterOperation));
           
             // Create the Frames
-            var scene = new Scene(startingFrame, animGeom, animOp);
+            var scene = new Scene(startingFrame, animGeom, animOp, persistAfterOperation);
 
             DA.SetData(0, scene);
         }
@@ -67,7 +71,7 @@ namespace Manakin.PluginGrasshopper
         /// You can add image files to your project resources and access them like this:
         /// return Resources.IconForThisComponent;
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => ResourceLoader.LoadBitmap("PluginGrasshopper_24.png");
+        protected override System.Drawing.Bitmap Icon => ResourceLoader.LoadBitmap("Create Scene_24.png");
 
         /// <summary>
         /// Each component must have a unique Guid to identify it. 

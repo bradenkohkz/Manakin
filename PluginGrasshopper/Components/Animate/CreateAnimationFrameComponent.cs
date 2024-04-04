@@ -71,11 +71,21 @@ namespace Manakin.PluginGrasshopper
             List<AnimationGeometry> frameGeometry = new List<AnimationGeometry>();
             foreach (var animScene in animScenes)
             {
-                if (animScene.StartingFrame > curFrameNumber) continue;
-                
-               frameGeometry.Add(animScene.Operation.GenerateGeometry(animScene.AnimationGeometry, curFrameNumber));
+                var minSceneFrame = animScene.StartingFrame;
+                var maxSceneFrame = minSceneFrame + animScene.Operation.NumberOfOperations - 1 ;
+
+                if (curFrameNumber >= minSceneFrame &&  curFrameNumber <= maxSceneFrame)
+                {
+                    frameGeometry.Add(
+                        animScene.Operation.GenerateGeometry(animScene.AnimationGeometry, curFrameNumber - minSceneFrame));
+                }
+
+                if (curFrameNumber > maxSceneFrame && animScene.PersistAfterOperation)
+                {
+                    frameGeometry.Add(animScene.Operation.GenerateGeometry(animScene.AnimationGeometry, animScene.Operation.NumberOfOperations - 1)); 
+                }
             }
-            
+
             // Account for static camera
             var camLoc = animationCamera.Locations[0];
             var camTar = animationCamera.Targets[0];
@@ -92,7 +102,7 @@ namespace Manakin.PluginGrasshopper
 
             DA.SetDataList(0, frameGeometry);
             DA.SetData(1,
-                new CameraPosition(camLoc,camTar));
+                new CameraPosition(camLoc, camTar));
         }
 
         /// <summary>
@@ -101,7 +111,7 @@ namespace Manakin.PluginGrasshopper
         /// You can add image files to your project resources and access them like this:
         /// return Resources.IconForThisComponent;
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => ResourceLoader.LoadBitmap("PluginGrasshopper_24.png");
+        protected override System.Drawing.Bitmap Icon => ResourceLoader.LoadBitmap("Create Animation Frame_24.png");
 
         /// <summary>
         /// Each component must have a unique Guid to identify it. 

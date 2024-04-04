@@ -4,13 +4,21 @@ namespace Manakin.PluginGrasshopper
 {
     public class Scene
     {
-        private double _startingFrame;
+        private int _startingFrame;
         
         private AnimationGeometry _animationGeometry;
 
         private IObjectOperation _operation;
 
-        public double StartingFrame
+        private bool _persistAfterOperation;
+
+        public bool PersistAfterOperation
+        {
+            get => _persistAfterOperation;
+            set => _persistAfterOperation = value;
+        }
+
+        public int StartingFrame
         {
             get => _startingFrame;
             set => _startingFrame = value;
@@ -28,11 +36,12 @@ namespace Manakin.PluginGrasshopper
             set => _operation = value;
         }
         
-        public Scene(double startingFrame, AnimationGeometry animationGeometry, IObjectOperation operation)
+        public Scene(int startingFrame, AnimationGeometry animationGeometry, IObjectOperation operation, bool persistAfterOperation = true)
         {
             _startingFrame = startingFrame;
             _animationGeometry = animationGeometry;
             _operation = operation;
+            _persistAfterOperation = persistAfterOperation;
         }
     }
 }
