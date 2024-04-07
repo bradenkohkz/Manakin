@@ -1,79 +1,53 @@
-# Grasshopper and Rhino Plug-in Template
-This repository contains a template for plug-ins to Grasshopper and [Rhino](https://www.rhino3d.com/). 
-The template follows best practices we use at ShapeDiver. 
+![](Images/Logo.png)
+# Manakin
+___
 
-## Features
+> A Grasshopper plugin that helps you create animation frames. 
 
-### Centralized versioning and metadata 
+## Design
+Creating animations in Grasshopper can be a pain and I wanted a set of components or a workflow that would make that process easier.
 
-see [CommonVariables.csproj](CommonVariables.csproj)
+Since there are already some render and animation functions in Grasshopper/Rhino like the animate slider function or the Render materials in viewport. I didn't want to re-invent the wheel or to fight with any of these functions. 
 
-The version of all assemblies built by the solution can be configured in a central place. 
-The same principle is used for further metadata like plug-in authorship, and properties
-of the [Package Manifest](https://developer.rhino3d.com/guides/yak/the-package-manifest/)
-for the [Yak Package Manager](https://developer.rhino3d.com/guides/yak/). 
+So this plugin will work off those functions and instead try to make working with them easier.
 
+Unlike traditional animation programs, creating animations in Grasshopper is done on a frame-by-frame basis. So instead of working with time, you are actually working with frames. This plugin doesn't stitch the frames and give you a video, you have to do that in another software. This plugin however does make creating those frames easier. 
 
-### Centralized nuget package versioning
-see [Directory.Packages.props](Directory.Packages.props)
+> This plugins embraces a "be there at the right time and right place" philosophy. Meaning all of it's operation is to put the camera and the geometry at the right place for the right frame. 
 
-Version of nuget packages are configured in a central place for all projects. 
+To create an animation with Manakin, there are 3 high level steps to follow.
 
-### Shared assembly between Grasshopper and Rhino plug-in
+### Step 1: Create animation geometry
+The first step is to create an "Animation Geometry". Which is just any geometry in Grasshopper/Rhino with a material assigned to it. 
 
-The setup includes two shared assemblies: 
+### Step 2: Assign an animation operation
+Then, it's to configure how you want to animate that geometry. Do you want to move it? rotate it? Scale it ? 
 
-  * [Shared](Shared) for shared code which does not depend on Rhino.
-  * [SharedRhino](SharedRhino) for shared code depending on Rhino. 
+Here's a list of operations you can do in Manakin. 
 
-### Setup for unit tests, including tests using Rhino.Inside
-  
-Two test projects are used for unit testing of the shared assemblies. Since [Rhino.Inside](https://github.com/mcneel/rhino.inside) this is very useful, 
-because one can test and debug code depending on Rhino without starting Rhino. 
+![](Images/Operations.png)
 
-  * [TestShared](TestShared) tests for the assembly [Shared](Shared)  
-  * [TestSharedRhino](TestSharedRhino) tests for the assembly [SharedRhino](SharedRhino)
-  
-How to use this? Start the _Test Explorer_ in Visual Studio. 
-  
-### Build scripts for Rhino 7 and 8, Windows and Mac
+### Step 2b (Optional): Assign camera positions
+Then, if you want, you can also configure how the camera will move during the animation. 
 
-The solution includes separate build configurations for Rhino 7 and Rhino 8. Rhino 6 can easily be added.
+### Step 3: Animate Frames
+Finally, you can creating the frames for the animationg.
 
-The following batch scripts are available for building using a single click.
+## Dependencies
+In the spirit of not re-inventing the wheel, this plugin depends on other plugins to create animations. Specifically: 
 
-  * [BuildRhino7.bat](BuildRhino7.bat) build for Rhino 7 including yak package
-  * [BuildRhino8.bat](BuildRhino8.bat) build for Rhino 8 including yak package
-  * [BuildYakOnlyRhino7.bat](BuildYakOnlyRhino7.bat) build yak package for Rhino 7 (requires the plugins to be built separately beforehand)
-  * [BuildYakOnlyRhino8.bat](BuildYakOnlyRhino8.bat) build yak package for Rhino 8 (requires the plugins to be built separately beforehand)
+- [Human](https://www.food4rhino.com/en/app/human) for setting materials to geometry in Grasshopper
+- [Horster](https://www.food4rhino.com/en/app/horster-camera-control-grasshopper) for controlling and getting the position of the camera in the Rhino viewport
 
-### Multi-targeting for Rhino 8
+At the moment, there are some issues with using these plugins but until they actually break the workflow, I didn't think it was worthwhile to create my own implementation. Not yet anyways. 
 
-The solution is configured to build a multi-targeted yak package in case of Rhino 8 (.NET Framework 4.8, .NET 7 for Windows and Mac). 
+## Example file 
+When you download the plugin from Food4Rhino, it should come with sample files. 
 
-Note: There is still a [bug related to this](https://discourse.mcneel.com/t/net-multi-targeting-for-yak-packages/166183/10?u=snabela) in yak for Rhino 8 SR 4, this should be fixed soon. 
+## Contact 
+If there are any issues with the plugin, feel free to leave a comment on the Food4Rhino page or put a feature / issue in the Github page.
 
 
-## How to use this
 
-Download the code or fork the repository. 
-Please open GitHub issues or submit a PR in case you find a problem or have suggestions for improvement. 
-
-Building the solution is supposed work out of the box in Visual Studio 2022. 
-We still need to test and add instructions for building using Visual Studio Code on Mac. 
-
-The following steps are important when starting your own plug-in from this: 
-
-  * Review and adapt the variable values in [CommonVariables.csproj](CommonVariables.csproj).
-    * Create a new Guid for the Grasshopper plug-in and replace `00000000-0000-0000-0000-000000000000`.
-    * Create a new Guid for the Rhino plug-in and replace `00000000-0000-0000-0000-000000000000`.
-    * Set your version number.
-    * Adapt information about Author, Company, Copyright, Product
-  * Review and adapt the variable values in [CommonVariables.bat](CommonVariables.bat).
-    * Installation path of Visual Studio
-    * Path to Yak package manager
-  * In case you don't need a Rhino or Grasshopper plug-in, remove it from the solution.
-  * Set Rhino plug-in metadata in [AssemblyInfo.cs](PluginRhino/Properties/AssemblyInfo.cs) (still need to implement to create this automatically).
-  * Adapt the images in [PluginGrasshopper/EmbeddedResources](PluginGrasshopper/EmbeddedResources) and [PluginRhino/EmbeddedResources](PluginRhino/EmbeddedResources).
 
 
