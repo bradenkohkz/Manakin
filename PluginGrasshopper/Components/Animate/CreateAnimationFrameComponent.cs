@@ -30,6 +30,7 @@ namespace Manakin.PluginGrasshopper
             pManager.AddIntegerParameter("Current Frame Number", "FN", "Current Frame Number", GH_ParamAccess.item);
             pManager.AddGenericParameter("Animation Scenes", "AS", "Animation Scenes", GH_ParamAccess.list);
             pManager.AddGenericParameter("Animation Camera", "AC", "Animation Camera", GH_ParamAccess.item);
+            pManager[2].Optional = true;
         }
 
         /// <summary>
@@ -56,15 +57,18 @@ namespace Manakin.PluginGrasshopper
             // Retrieve input data
             if (!DA.GetData(0, ref curFrameNumber)) return;
             if (!DA.GetDataList(1, animScenes)) return;
-            if (!DA.GetData(2, ref animationCamera)) return;
+            if (!DA.GetData(2, ref animationCamera)) ;
 
             var totalNumOfFrames = animScenes.Select(x => x.Operation.NumberOfOperations).Sum();
 
-            if (animationCamera.Locations.Count != 1 && totalNumOfFrames != animationCamera.Locations.Count)
+            if (animationCamera != null)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
-                    "The number of frames in your objects and the camera don't match");
-                return;
+                if (animationCamera.Locations.Count != 1 && totalNumOfFrames != animationCamera.Locations.Count)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
+                        "The number of frames in your objects and the camera don't match");
+                    return;
+                }
             }
 
             // Loop through the scenes and see which objects we need to "render" 
@@ -72,37 +76,44 @@ namespace Manakin.PluginGrasshopper
             foreach (var animScene in animScenes)
             {
                 var minSceneFrame = animScene.StartingFrame;
-                var maxSceneFrame = minSceneFrame + animScene.Operation.NumberOfOperations - 1 ;
+                var maxSceneFrame = minSceneFrame + animScene.Operation.NumberOfOperations - 1;
 
-                if (curFrameNumber >= minSceneFrame &&  curFrameNumber <= maxSceneFrame)
+                if (curFrameNumber >= minSceneFrame && curFrameNumber <= maxSceneFrame)
                 {
                     frameGeometry.Add(
-                        animScene.Operation.GenerateGeometry(animScene.AnimationGeometry, curFrameNumber - minSceneFrame));
+                        animScene.Operation.GenerateGeometry(animScene.AnimationGeometry,
+                            curFrameNumber - minSceneFrame));
                 }
 
                 if (curFrameNumber > maxSceneFrame && animScene.PersistAfterOperation)
                 {
-                    frameGeometry.Add(animScene.Operation.GenerateGeometry(animScene.AnimationGeometry, animScene.Operation.NumberOfOperations - 1)); 
+                    frameGeometry.Add(animScene.Operation.GenerateGeometry(animScene.AnimationGeometry,
+                        animScene.Operation.NumberOfOperations - 1));
                 }
             }
-
-            // Account for static camera
-            var camLoc = animationCamera.Locations[0];
-            var camTar = animationCamera.Targets[0];
-
-            if (animationCamera.Locations.Count > 1)
-            {
-                camLoc = animationCamera.Locations[curFrameNumber];
-            }
-
-            if (animationCamera.Targets.Count > 1)
-            {
-                camTar = animationCamera.Targets[curFrameNumber];
-            }
-
+            
             DA.SetDataList(0, frameGeometry);
-            DA.SetData(1,
-                new CameraPosition(camLoc, camTar));
+
+            if (animationCamera != null)
+            {
+                // Account for static camera
+                var camLoc = animationCamera.Locations[0];
+                var camTar = animationCamera.Targets[0];
+
+                if (animationCamera.Locations.Count > 1)
+                {
+                    camLoc = animationCamera.Locations[curFrameNumber];
+                }
+
+                if (animationCamera.Targets.Count > 1)
+                {
+                    camTar = animationCamera.Targets[curFrameNumber];
+                }
+
+                DA.SetData(1,
+                    new CameraPosition(camLoc, camTar));
+            }
+
         }
 
         /// <summary>

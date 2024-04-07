@@ -5,7 +5,7 @@ using Rhino.Geometry;
 
 namespace Manakin.PluginGrasshopper
 {
-    public class PersistObjectOperation : IObjectOperation
+    public class PersistObjectOperation : BaseOperation
     {
         private int _frames;
 
@@ -16,17 +16,22 @@ namespace Manakin.PluginGrasshopper
         }
 
 
-        public PersistObjectOperation(int frames)
+        public PersistObjectOperation(int frames): base("Persist", "Leaves geometry in the scene")
         {
             _frames = frames;
         }
 
-        public AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
+        public override BaseOperation DuplicateOperation()
+        {
+            return new PersistObjectOperation(this.Frames);
+        }
+
+        public override AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
         {
             return startingGeometry;
         }
 
-        public int NumberOfOperations
+        public override int NumberOfOperations
         {
             get => Frames;
         }

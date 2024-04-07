@@ -1,9 +1,10 @@
+using System.CodeDom;
 using System.Collections.Generic;
 using Rhino.Geometry;
 
 namespace Manakin.PluginGrasshopper
 {
-    public class MoveObjectOperation : IObjectOperation
+    public class MoveObjectOperation : BaseOperation
     {
         private Curve _rail;
 
@@ -21,13 +22,18 @@ namespace Manakin.PluginGrasshopper
             set => _parameters = value;
         }
 
-        public MoveObjectOperation(Curve rail, List<double> parameters)
+        public MoveObjectOperation(Curve rail, List<double> parameters): base("Move", "Moves Geometry on a rail")
         {
             _rail = rail;
             _parameters = parameters;
         }
 
-        public AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
+        public override BaseOperation DuplicateOperation()
+        {
+            return new MoveObjectOperation(this._rail, this._parameters);
+        }
+
+        public override AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
         {
             var cloneGeometry = startingGeometry.Geometry.Duplicate();
             var origin = Rail.PointAt(Parameters[0]);
@@ -38,7 +44,7 @@ namespace Manakin.PluginGrasshopper
                 startingGeometry.MaterialTransparency);
         }
 
-        public int NumberOfOperations
+        public override int NumberOfOperations
         {
             get => _parameters.Count;
         }

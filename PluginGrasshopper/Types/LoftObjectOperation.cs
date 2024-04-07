@@ -3,7 +3,7 @@ using Rhino.Geometry;
 
 namespace Manakin.PluginGrasshopper
 {
-    public class LoftObjectOperation : IObjectOperation
+    public class LoftObjectOperation : BaseOperation
     {
         private List<Curve> _sections;
 
@@ -13,12 +13,17 @@ namespace Manakin.PluginGrasshopper
             set => _sections = value;
         }
 
-        public LoftObjectOperation(List<Curve> sections)
+        public LoftObjectOperation(List<Curve> sections): base("Loft", "Animates the lofting of sections")
         {
             _sections = sections;
         }
 
-        public AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
+        public override BaseOperation DuplicateOperation()
+        {
+            return new LoftObjectOperation(this.Sections);
+        }
+
+        public override AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
         {
             var loftSections = new List<Curve>();
             for (int i = 0; i <= frameNumber; i++)
@@ -42,7 +47,7 @@ namespace Manakin.PluginGrasshopper
                 startingGeometry.MaterialTransparency);
         }
 
-        public int NumberOfOperations
+        public override int NumberOfOperations
         {
             get => Sections.Count;
         }

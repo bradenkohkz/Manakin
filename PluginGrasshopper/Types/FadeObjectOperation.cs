@@ -3,7 +3,7 @@ using Rhino.Geometry;
 
 namespace Manakin.PluginGrasshopper
 {
-    public class FadeObjectOperation : IObjectOperation
+    public class FadeObjectOperation : BaseOperation
     {
         private List<double> _transparencies;
 
@@ -13,19 +13,24 @@ namespace Manakin.PluginGrasshopper
             set => _transparencies = value;
         }
 
-        public FadeObjectOperation(List<double> transparencies)
+        public FadeObjectOperation(List<double> transparencies): base("Fade", "Fades geometry")
         {
             _transparencies = transparencies;
         }
 
-        public AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
+        public override BaseOperation DuplicateOperation()
+        {
+            return new FadeObjectOperation(this.Transparencies);
+        }
+
+        public override AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
         {
             var baseTransparency = startingGeometry.MaterialTransparency;
 
             return new AnimationGeometry(startingGeometry.Geometry, startingGeometry.MaterialName,baseTransparency * Transparencies[frameNumber]);
         }
 
-        public int NumberOfOperations
+        public override int NumberOfOperations
         {
             get => _transparencies.Count;
         }

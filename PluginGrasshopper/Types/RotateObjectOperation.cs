@@ -4,7 +4,7 @@ using Rhino.Geometry;
 
 namespace Manakin.PluginGrasshopper
 {
-    public class RotateObjectOperation : IObjectOperation
+    public class RotateObjectOperation : BaseOperation
     {
         private Point3d _rotOrigin;
 
@@ -30,7 +30,7 @@ namespace Manakin.PluginGrasshopper
             set => _angles = value;
         }
 
-        public RotateObjectOperation(List<double> angles, Vector3d rotAxis, Point3d rotOrigin)
+        public RotateObjectOperation(List<double> angles, Vector3d rotAxis, Point3d rotOrigin): base("Rotate", "Rotates an object")
         {
             _rotOrigin = rotOrigin;
             _angles = angles;
@@ -38,7 +38,12 @@ namespace Manakin.PluginGrasshopper
         }
 
 
-        public AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
+        public override BaseOperation DuplicateOperation()
+        {
+            return new RotateObjectOperation(this.Angles, this.RotAxis, this.RotOrigin);
+        }
+
+        public override AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
         {
             var cloneGeometry = startingGeometry.Geometry.Duplicate();
             var rotCenter = RotOrigin == Point3d.Unset ? startingGeometry.Geometry.GetBoundingBox(Plane.WorldXY).Center : RotOrigin;
@@ -51,6 +56,6 @@ namespace Manakin.PluginGrasshopper
                 startingGeometry.MaterialTransparency);
         }
 
-        public int NumberOfOperations { get => _angles.Count; }
+        public override int NumberOfOperations { get => _angles.Count; }
     }
 }

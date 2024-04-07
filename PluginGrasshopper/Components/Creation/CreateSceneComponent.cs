@@ -50,7 +50,7 @@ namespace Manakin.PluginGrasshopper
             // Variables to hold input data
             int startingFrame = 0;
             AnimationGeometry animGeom = null;
-            IObjectOperation animOp = null;
+            BaseOperation animOp = null;
             bool persistAfterOperation = true;
 
             // Retrieve input data

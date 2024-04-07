@@ -5,7 +5,7 @@ using Rhino.Geometry;
 
 namespace Manakin.PluginGrasshopper
 {
-    public class ScaleObjectOperation : IObjectOperation
+    public class ScaleObjectOperation : BaseOperation
     {
         private Point3d _scaleOrigin;
 
@@ -39,7 +39,7 @@ namespace Manakin.PluginGrasshopper
         }
 
 
-        public ScaleObjectOperation(Point3d scaleOrigin, List<double> xfactors, List<double> yfactors, List<double> zfactors)
+        public ScaleObjectOperation(Point3d scaleOrigin, List<double> xfactors, List<double> yfactors, List<double> zfactors): base("Scale","Scales geometry")
         {
             _scaleOrigin = scaleOrigin;
             _xfactors = xfactors;
@@ -59,7 +59,12 @@ namespace Manakin.PluginGrasshopper
             }
         }
 
-        public AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
+        public override BaseOperation DuplicateOperation()
+        {
+            return new ScaleObjectOperation(this.ScaleOrigin, this.Xfactors, this.Yfactors, this.Zfactors);
+        }
+
+        public override AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber)
         {
             var cloneGeometry = startingGeometry.Geometry.Duplicate();
             var scaleCenter = ScaleOrigin == Point3d.Unset ? startingGeometry.Geometry.GetBoundingBox(Plane.WorldXY).PointAt(0.5,0.5,0): ScaleOrigin;
@@ -74,7 +79,7 @@ namespace Manakin.PluginGrasshopper
                 startingGeometry.MaterialTransparency);
         }
 
-        public int NumberOfOperations
+        public override int NumberOfOperations
         {
             get => new[] { Xfactors.Count, Yfactors.Count, Zfactors.Count }.Max();
         }

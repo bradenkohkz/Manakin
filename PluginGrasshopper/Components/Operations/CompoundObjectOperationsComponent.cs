@@ -80,10 +80,10 @@ namespace Manakin.PluginGrasshopper
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             // Loop through all the operations 
-            var allOperations = new List<IObjectOperation>();
+            var allOperations = new List<BaseOperation>();
             for (int i = 0; i < Params.Input.Count; i++)
             {
-                IObjectOperation inputData = null;
+                BaseOperation inputData = null;
                 if (DA.GetData(i, ref inputData))
                 {
                     allOperations.Add(inputData);

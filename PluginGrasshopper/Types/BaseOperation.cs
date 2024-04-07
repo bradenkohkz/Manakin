@@ -1,35 +1,22 @@
-using System.Collections.Generic;
+using System;
 using GH_IO.Serialization;
 using Grasshopper.Kernel.Types;
-using Rhino.Geometry;
 
 namespace Manakin.PluginGrasshopper
 {
-    public class AnimationCamera: IGH_Goo
+    public abstract class BaseOperation : IGH_Goo
     {
-        private List<Point3d> _locations;
-        private List<Point3d> _targets;
+        private string _operationName;
+        private string _operationDescription;
+        public abstract BaseOperation DuplicateOperation();
+        public abstract AnimationGeometry GenerateGeometry(AnimationGeometry startingGeometry, int frameNumber);
+        public abstract int NumberOfOperations { get; }
 
-        public List<Point3d> Locations
+        
+        public BaseOperation(string operationName, string operationDescription)
         {
-            get => _locations;
-            set => _locations = value;
-        }
-
-        public List<Point3d> Targets
-        {
-            get => _targets;
-            set => _targets = value;
-        }
-
-        public AnimationCamera()
-        {
-        }
-
-        public AnimationCamera(List<Point3d> locations, List<Point3d> targets)
-        {
-            _locations = locations;
-            _targets = targets;
+            _operationName = operationName;
+            _operationDescription = operationDescription;
         }
 
         public bool Write(GH_IWriter writer)
@@ -44,7 +31,7 @@ namespace Manakin.PluginGrasshopper
 
         public IGH_Goo Duplicate()
         {
-            return new AnimationCamera(this.Locations, this.Targets);
+            return DuplicateOperation();
         }
 
         public IGH_GooProxy EmitProxy()
@@ -69,7 +56,7 @@ namespace Manakin.PluginGrasshopper
 
         public bool IsValid => true;
         public string IsValidWhyNot => "";
-        public string TypeName => "Animation Camera";
-        public string TypeDescription => "Parameter for Animation Camera";
+        public string TypeName => _operationName;
+        public string TypeDescription => _operationDescription;
     }
 }
