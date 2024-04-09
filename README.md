@@ -42,10 +42,10 @@ In the spirit of not re-inventing the wheel, this plugin depends on other plugin
 At the moment, there are some issues with using these plugins but until they actually break the workflow, I didn't think it was worthwhile to create my own implementation. Not yet anyways. 
 
 ## Example file 
-When you download the plugin from Food4Rhino, it should come with sample files. 
+When you download the plugin from ![Food4Rhino](https://www.food4rhino.com/en/app/manakin?lang=en), it should come with sample files. 
 
 ## Contact 
-If there are any issues with the plugin, feel free to leave a comment on the Food4Rhino page or put a feature / issue in the Github page.
+If there are any issues with the plugin, feel free to leave a comment on the ![Food4Rhino page](https://www.food4rhino.com/en/app/manakin?lang=en) or put a feature / issue in the Github page.
 
 
 
